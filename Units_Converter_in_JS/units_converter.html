@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Length units converter</title>
+
+	<script>
+
+		const YARD_UNIT_RATIO = 0.9144; // [m]
+		const KNOT_UNIT_RATIO = 14.63; // [m]
+		const FOOT_UNIT_RATIO = 0.30; // [m]
+
+		var conversionDirection = "to_meters"; 
+		var lengthUnit = "knot"; 
+		
+		window.onload = main; 
+
+		function main() { 
+
+			var lengthValueInput = document.unit_converter_form.length_value; 
+			lengthValueInput.onchange = lengthValueChanged; 
+		
+			var conversionDirectionRadios = document.unit_converter_form.conversion_direction; 
+
+			for(var i=0; i< conversionDirectionRadios.length; i++) { 
+				conversionDirectionRadios[i].onclick = function() { 
+					conversionDirectionChanged(this.value); 
+				}
+			}
+
+			var unitOfLengthSelect = document.unit_converter_form.unit_of_length; 
+			unitOfLengthSelect.onchange = unitSelected; 
+
+			var calculateButton = document.unit_converter_form.calculate_button; 
+			calculate_button.onclick = calculate; 
+		}
+
+		function conversionDirectionChanged(direction) { 
+
+				conversionDirection = direction; 
+		}
+
+		function unitSelected() { 
+
+			var unit = this.options[this.selectedIndex].value; 
+			lengthUnit = unit; 
+
+			if(unit == "knot") { 
+				document.body.style.backgroundColor = "blue"; 
+			} else if(unit == "yard") { 
+				document.body.style.backgroundColor = "red"; 
+			} else if(unit == "foot") { 
+				document.body.style.backgroundColor = "green"; 
+			}
+			
+		}
+
+		function lengthValueChanged() { 
+
+			if(this.value < 0) { 
+				document.unit_converter_form.calculate_button.disabled = true;
+				alert("Incorrect length value!"); 
+			} else { 
+				document.unit_converter_form.calculate_button.disabled = false;
+			}
+		}
+
+		function calculate() { 
+
+			// alert(conversionDirection); 
+			// alert(lengthUnit); 
+
+			var lengthValue = document.unit_converter_form.length_value.value; 
+
+			var result; 
+
+			if(conversionDirection == "to_meters") { 
+				if(lengthUnit == "knot") { 
+					result = convertKnotToMeter(lengthValue);
+				} else if(lengthUnit == "yard") { 
+					result = convertYardToMeter(lengthValue); 
+				} else if(lengthUnit == "foot") { 
+					result = converFootToMeter(lengthValue); 
+				}
+			} else { 
+				if(lengthUnit == "knot") { 
+					result = convertMeterToKnot(lengthValue); 
+				} else if(lengthUnit == "yard") { 
+					result = convertMeterToYard(lengthValue); 
+				} else if(lengthUnit == "foot") { 	
+					result = convertMeterToFoot(lengthValue); 
+				}
+			}
+
+			document.getElementById("calculation_output").innerHTML = result.toFixed(3); 
+			document.getElementById("output").style.display = "block"; 
+
+		}
+
+		function convertKnotToMeter(lengthValue) { 
+			return convert(lengthValue, KNOT_UNIT_RATIO); 
+		}
+
+		function convertYardToMeter(lengthValue) { 
+			return convert(lengthValue, YARD_UNIT_RATIO); 
+		}
+
+		function converFootToMeter(lengthValue) { 
+			return convert(lengthValue, FOOT_UNIT_RATIO); 
+		}
+
+		function convertMeterToKnot(lengthValue) { 
+			return convert(lengthValue, 1.0/KNOT_UNIT_RATIO); 
+		}
+
+		function convertMeterToYard(lengthValue) { 
+			return convert(lengthValue, 1.0/YARD_UNIT_RATIO); 
+		}
+
+		function convertMeterToFoot(lengthValue) { 
+			return convert(lengthValue, 1.0/FOOT_UNIT_RATIO); 
+		}
+
+		function convert(lengthValue, ratio) { 
+			return lengthValue*ratio; 
+		}
+
+	</script>
+
+	<style>
+	#unit_converter { 
+		border: 1px solid #ccc;
+		padding: 10px; 
+		width: 300px;
+	}
+	 #output { 
+	 	font-size: 1.2em; 
+	 	font-weight: bold; 
+	 	color: black;
+	 }
+	 body { 
+	 	background-color: blue; 
+	 }
+	</style>
+</head>
+
+<body>
+	<h1>Length units converter</h1>
+
+	<div id="unit_converter">
+		<form name="unit_converter_form">
+			<label> Length: </label> <input name="length_value" type="text" value="" /><br /><br />
+			<input type="radio" name="conversion_direction" value="to_meters" checked/> <label>to meters </label> 
+			<input type="radio" name="conversion_direction" value="from_meters" /> <label> from meters </label> <br /><br />
+
+			<label> Unit of length </label>
+			<select name="unit_of_length"> 
+				<option value="knot">Knot</option>
+				<option value="yard">Yard</option>
+				<option value="foot">Foot</option>
+			</select>	
+			<br /><br />
+			<input name="calculate_button" type="button" id="calculate_button" value="Calculate" disabled />
+			<br /><br />
+			<div id="output" style="display:none"><label>Result: </label><span id="calculation_output"></span></div>
+		</form>	
+	</div>	
+</body>
+</html>

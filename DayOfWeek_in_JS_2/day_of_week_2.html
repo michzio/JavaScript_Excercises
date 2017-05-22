@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Day of Week 2</title>
+	<script>
+	function updateDateTimeDisplay() {
+	    
+	    // get current datetime object 
+	    var now = new Date();
+	    
+	    // get each part of datetime 
+	    var year = now.getFullYear();
+	    var month = now.getMonth(); // it is zero-based value, so need to be increased by 1 if displayed as numeric value
+	    // var day = now.getDay(); // it is day of week not day of month! 
+	    var day = now.getDate();   // it is day of month 
+	    var hours = now.getHours();
+	    var minutes = now.getMinutes();
+	    var seconds = now.getSeconds();
+
+	    // pad each time element to have always two digits
+	    day = padWithZero(day);
+	    //month = padWithZero(month); 
+	    hours = padWithZero(hours); 
+	    minutes = padWithZero(minutes);
+	    seconds = padWithZero(seconds);
+
+	    var monthNames = ["January", "February", "March", "April", "May", "June",
+  						  "July", "August", "September", "October", "November", "December"
+						  ];
+
+	    // fill tables with datetime values 
+	    document.getElementById('datetime_year').innerHTML = year; 
+	    document.getElementById('datetime_month').innerHTML = monthNames[month]; 
+	    document.getElementById('datetime_day').innerHTML = day; 
+	    document.getElementById('datetime_hours').innerHTML = hours; 
+	    document.getElementById('datetime_minutes').innerHTML = minutes; 
+	    document.getElementById('datetime_seconds').innerHTML = seconds; 
+
+	    // display name of current day
+	    document.getElementById("dayOfWeekName").innerHTML = dayOfWeek(now.getDay()); 
+	    
+	    // update date time values in HTML table 
+	    // after 500ms = 0.5s (as 1s = 1000ms) timeout 
+	    var t = setTimeout(updateDateTimeDisplay, 500);
+	}
+
+	// function pad minutes or seconds with leading zero if it is needed 
+	// i.e. if passed argument is less than 10 
+	function padWithZero(i) {
+	    if (i < 10) {
+	    	i = "0" + i
+	    };
+	    return i;
+	}
+
+	// function that converts numeric day of week into string representation 
+	// indices are 0-based and starts from Sunday
+	function dayOfWeek(dayNumber) { 
+
+		switch(dayNumber) { 
+			case 0: 
+				return "Sunday"; 
+			case 1: 
+				return "Monday"; 
+			case 2: 
+				return "Tuesday"; 
+			case 3: 
+				return "Wednesday"; 
+			case 4: 
+				return "Thursday"; 
+			case 5: 
+				return "Friday"; 
+			case 6: 
+				return "Saturday";
+			default: 
+				throw "Incorrect number representing day of the week!";  				
+		}
+	}
+
+	</script>
+	<style>
+
+	  #datetime_display th { 
+	  		background-color: #000;
+	  		color: #fff;
+	  		padding: 5px;
+	  }
+
+	  #datetime_display td { 
+	  		background-color: #f5f5f5;
+	  		color: #000;
+	  		padding: 5px;
+	  }
+	</style>
+</head>
+
+<body onload="updateDateTimeDisplay()">
+
+	<div id="datetime_display">
+		<table>
+		 <tr>
+		   <th>Year</th>
+		   <th>Month</th>
+		   <th>Day</th>
+		   <th>Hours</th>
+		   <th>Minutes</th>
+		   <th>Seconds</th>
+		 </tr>
+		 <tr>
+		   <td id="datetime_year">0</td>
+		   <td id="datetime_month">0</td>
+		   <td id="datetime_day">0</td>
+           <td id="datetime_hours">0</td>
+           <td id="datetime_minutes">0</td>
+           <td id="datetime_seconds">0</td>
+		 </tr>
+		 <tr>
+		 	<td colspan="6" id="dayOfWeekName">Day of Week Here</td>
+		 </tr>
+		</table>
+	</div>
+</body>
+</html>
